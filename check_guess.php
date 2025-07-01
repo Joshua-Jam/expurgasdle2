@@ -10,20 +10,9 @@ if (!$guess) {
     exit;
 }
 
-$hoje = date('Y-m-d');
-
-$enigmaStmt = $pdo->prepare("
-    SELECT p.* FROM enigma_do_dia e
-    JOIN personagens p ON p.id = e.personagem_id
-    WHERE e.data = ?
-");
-$enigmaStmt->execute([$hoje]);
-$correct = $enigmaStmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$correct) {
-    echo json_encode(['error' => 'Enigma do dia não definido.']);
-    exit;
-}
+// Pega o personagem correto (enigma do dia)
+$correctStmt = $pdo->query("SELECT * FROM personagens WHERE id = 1"); // Fixado para exemplo
+$correct = $correctStmt->fetch(PDO::FETCH_ASSOC);
 
 $guessStmt = $pdo->prepare("SELECT * FROM personagens WHERE LOWER(nome) = LOWER(?)");
 $guessStmt->execute([$guess]);
